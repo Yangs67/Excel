@@ -1,7 +1,6 @@
 Function RunMacroToTargetFile
     Dim wb As Workbook
     Dim myWorkbook As String
-    Dim myWorksheet As String
     Dim fullpath As String
     Dim myFile As String
     
@@ -10,6 +9,32 @@ Function RunMacroToTargetFile
     Application.EnableEvents = False
     Application.Calculation = xlCalculationManual
     
+'''Open the file dialog
+    With Application.FileDialog(msoFileDialogOpen)
+        .Title = "Select A Target File"
+        .AllowMultiSelect = False
+        If .Show <> -1 Then GoTo nextCode
+        fullpath = .SelectedItems.Item(1)
+    End With
     
+'''Open target file    
+    Workbooks.Open(fullpath)
+    myWorkbook = ActiveWorkbook.Name
 
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''' Work Code Here ''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+'''Message box when tasks are completed
+    MsgBox "Task has completed!"
+    
+'''Close and not save original file
+    Workbooks(myWorkbook).Close SaveChanges:=False
+    
+nextCode:
+'''Reset Macro Optimization Settings
+    Application.EnableEvents = True
+    Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+    
 End Function
