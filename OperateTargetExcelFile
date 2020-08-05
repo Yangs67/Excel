@@ -1,4 +1,15 @@
 Function RunMacroToTargetFile
-
+    Dim wb As Workbook
+    Dim myWorkbook As String
+    Dim myWorksheet As String
+    Dim fullpath As String
+    Dim myFile As String
+    
+'''Optimize Macro Speed
+    Application.ScreenUpdating = False
+    Application.EnableEvents = False
+    Application.Calculation = xlCalculationManual
+    
+    
 
 End Function
