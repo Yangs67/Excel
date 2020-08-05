@@ -1,0 +1,57 @@
+Function LoopAllExcelFilesInFolder()
+    Dim wb as Workbook
+    Dim myPath As String
+    Dim myFile As String
+    Dim myExtension As String
+    Dim FldrPicker As FileDialog
+	
+'''Optimize Macro Speed
+	Application.ScreenUpdating = False
+	Application.EnableEvent = False
+	Application.Calculation = xlCalculationManual
+	
+'''Retireve Target Folder path From User
+	Set FldrPicker = Application.FileDialog(msoFileDialogFolderPicker)
+	With FldrPicker
+		.Title = "Select A Target Folder"
+		.AllowMultiSelect = False
+		If .Show <> -1 Then GoTo nextCode
+		myPath = .SelectedItems(1) & "\"
+	End With
+
+'''In case of Cancel
+nextCode:
+	myPath=myPath
+	If myPath="" Then GoTo resetSettings
+	
+'''Target File Extension (must include wildcard "*")
+	myExtension = "*.xls*"
+'''Target Path with ending extension
+	myFile = Dir(myPath & myExtension)
+'''Loop through each Excel file in folder
+	Do While myFile <> ""
+		'''Set variable equal to opened workbook
+		Set wb = Workbooks.Open(Filename:=myPath & myFile)
+		'''Ensure Workbook has opened before moving to next line of code
+		DoEvents
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''        Work Code Here        '''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+		'''Save and close workbook
+		wb.Close SaveChanges:=True
+		'''Ensure Workbook has closed before moving on next time of code
+		DoEvent
+		'''Get next file name
+		myFile = Dir
+	Loop
+
+'''Message box when tasks are completed
+	MsgBox "Task Complete!"
+
+resetSettings:
+'''Reset Macro Optimization Settings
+	Application.EnableEvents = True
+	Application.Calculation = xlCalculationAutomatic
+	Application.ScreenUpdating = True
+
+End Function
